@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Workorders.WorkorderPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Workorders"
+    xmlns:m="clr-namespace:OsFacil.Mobile.Api.Models.Workorders"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="vm:WorkorderViewModel"
+    Title="Ordem de serviço"
+    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#0B1220}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- HEADER -->
+
+            <Grid Grid.Row="0"
+              Padding="16,14"
+              ColumnDefinitions="*,Auto"
+              BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+
+                <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+
+                <Button Text="Cadastrar"
+                        Command="{Binding AddWorkspaceCommand}"
+                        HeightRequest="40"
+                        FontSize="13"
+                        CornerRadius="12"
+                        Padding="14,0"
+                        HorizontalOptions ="Center"
+                        BackgroundColor="{AppThemeBinding Light=#0F172A, Dark=#0F172A}"
+                        TextColor="White" />
+
+                <Button Text="Recarregar"
+                        Command="{Binding ReloadCommand}"
+                        HeightRequest="40"
+                        FontSize="13"
+                        CornerRadius="12"
+                        Padding="14,0"
+                        HorizontalOptions ="Center"
+                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#0B1220}"
+                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                        BorderWidth="1"
+                        BorderColor="{AppThemeBinding Light=#CBD5E1, Dark=#223047}" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- FILTROS (EXPANSÍVEL) -->
+        <Border Grid.Row="1"
+                Margin="16,10"
+                Padding="14,12"
+                StrokeThickness="1"
+                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="10">
+
+                <!-- Linha topo -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Label Text="Filtros"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+
+                    <Button Grid.Column="1"
+                            Text="{Binding FiltersToggleText}"
+                            Command="{Binding ToggleFiltersCommand}"
+                            BackgroundColor="Transparent"
+                            Padding="10,0"
+                            TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+                </Grid>
+
+                <!-- Conteúdo -->
+                <VerticalStackLayout IsVisible="{Binding IsFiltersOpen}" Spacing="12">
+
+                    <!-- Cliente -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Cliente (nome ou slug)"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#0B1220}"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Entry Placeholder="Ex: acme ou acme-sistemas"
+                                   Text="{Binding Filters.ClientNameOrSlug}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Valor -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Valor"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#0B1220}"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Entry Placeholder="Ex: 150,00"
+                                   Keyboard="Numeric"
+                                   Text="{Binding Filters.AmountText}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Criado em (range) -->
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding Filters.UseCreatedAtRange}" VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="Filtrar por data de criação"
+                               FontSize="12"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                    </Grid>
+
+                    <Grid IsVisible="{Binding Filters.UseCreatedAtRange}"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="10">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Criado de"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                            <DatePicker Date="{Binding Filters.StartCreatedAtDate}"
+                                        Format="dd/MM/yyyy" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="Criado até"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                            <DatePicker Date="{Binding Filters.FinishedCreatedAtDate}"
+                                        Format="dd/MM/yyyy" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Finalizado em (range) -->
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding Filters.UseFinishedAtRange}" VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="Filtrar por data de finalização"
+                               FontSize="12"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                    </Grid>
+
+                    <Grid IsVisible="{Binding Filters.UseFinishedAtRange}"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="10">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Finalizado de"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                            <DatePicker Date="{Binding Filters.StartFinishedAtDate}"
+                                        Format="dd/MM/yyyy" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="Finalizado até"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E7EB}" />
+                            <DatePicker Date="{Binding Filters.FinesedFinishedAtDate}"
+                                        Format="dd/MM/yyyy" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Ações -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Text="Limpar"
+                                Command="{Binding ClearFiltersCommand}"
+                                HeightRequest="40"
+                                CornerRadius="12"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#0B1220}"
+                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                BorderWidth="1"
+                                BorderColor="{AppThemeBinding Light=#CBD5E1, Dark=#223047}" />
+
+                        <Button Grid.Column="1"
+                                Text="Aplicar"
+                                Command="{Binding ApplyFiltersCommand}"
+                                HeightRequest="40"
+                                CornerRadius="12"
+                                BackgroundColor="{AppThemeBinding Light=#0F172A, Dark=#0F172A}"
+                                TextColor="White" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- REFRESH + LISTA -->
+        <RefreshView Grid.Row="2"
+                     IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                     Command="{Binding RefreshCommand}">
+
+            <CollectionView Margin="16,12"
+                            ItemsSource="{Binding Items}"
+                            RemainingItemsThreshold="4"
+                            SelectionMode="None">
+
+                <!-- Scroll infinito -->
+                <CollectionView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="RemainingItemsThresholdReached"
+                        Command="{Binding LoadMoreCommand}" />
+                </CollectionView.Behaviors>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:WorkorderModel">
+
+                        <Border Margin="0,0,0,10"
+                                Padding="14,12"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="10"
+                                  RowSpacing="8">
+
+                                <!-- Cliente + Título -->
+                                <VerticalStackLayout Grid.Row="0" Spacing="2">
+                                    <Label Text="{Binding ClientName}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Label Text="{Binding Title}"
+                                           FontSize="13"
+                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+
+                                <!-- Botão Execuções -->
+                                <Button Grid.Row="0"
+                                        Grid.Column="1"
+                                        Text="Executar"
+                                        HeightRequest="34"
+                                        FontSize="12"
+                                        CornerRadius="12"
+                                        Padding="12,0"
+                                        BackgroundColor="{AppThemeBinding Light=#0F172A, Dark=#0F172A}"
+                                        TextColor="White"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenExecutionCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                                <!-- Status + Valor -->
+                                <Grid Grid.Row="1"
+                                      Grid.ColumnSpan="2"
+                                      ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="10">
+
+                                    <Label Text="{Binding Status}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Amount, StringFormat='R$ {0:N2}'}"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="End" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>

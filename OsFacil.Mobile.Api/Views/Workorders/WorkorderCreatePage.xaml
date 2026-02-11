@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Workorders.WorkorderCreatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Workorders"
+    x:DataType="vm:WorkorderCreateViewModel"
+    Title="Cadastrar ordem de serviço"
+    BackgroundColor="{DynamicResource AppBackground}">
+
+    <Grid RowDefinitions="*,Auto" Padding="16">
+
+        <!-- FORM -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="14">
+
+                <!-- Card -->
+                <Border StrokeThickness="1"
+                        Stroke="{DynamicResource Border}"
+                        BackgroundColor="{DynamicResource Surface}"
+                        Padding="16">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="14">
+
+                        <!-- Cliente -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Cliente"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding WorkorderModel.ClientBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Picker Title="Selecione um cliente"
+                                        ItemsSource="{Binding Clients}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding WorkorderModel.SelectedClient}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{DynamicResource Text}"
+                                        TitleColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding WorkorderModel.ClientError}"
+                                   IsVisible="{Binding HasClientError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                        <!-- Título -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Título"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding WorkorderModel.TitleBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Entry Placeholder="Ex: Troca de tela"
+                                       Text="{Binding WorkorderModel.Title}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{DynamicResource Text}"
+                                       PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding WorkorderModel.TitleError}"
+                                   IsVisible="{Binding HasTitleError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                        <!-- Descrição -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Descrição"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding WorkorderModel.DescriptionBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Editor Placeholder="Descreva o serviço..."
+                                        Text="{Binding WorkorderModel.Description}"
+                                        HeightRequest="100"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{DynamicResource Text}"
+                                        PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding WorkorderModel.DescriptionError}"
+                                   IsVisible="{Binding HasDescriptionError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                        <!-- Valor -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Valor"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding WorkorderModel.AmountBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Entry Placeholder="Ex: 150,00"
+                                       Keyboard="Numeric"
+                                       Text="{Binding WorkorderModel.AmountText}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{DynamicResource Text}"
+                                       PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding WorkorderModel.AmountError}"
+                                   IsVisible="{Binding HasAmountError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Espaço extra -->
+                <BoxView HeightRequest="10" Opacity="0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- FOOTER BUTTONS -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+            <Button Text="Voltar"
+                    Command="{Binding BackCommand}"
+                    CommandParameter="{x:Boolean False}"
+                    BackgroundColor="{DynamicResource Surface2}"
+                    TextColor="{DynamicResource Text}"
+                    CornerRadius="14"
+                    HeightRequest="46"
+                    FontAttributes="Bold" />
+
+            <Button Grid.Column="1"
+                    Text="{Binding SaveButtonText}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    BackgroundColor="{DynamicResource Primary}"
+                    TextColor="White"
+                    CornerRadius="14"
+                    HeightRequest="46"
+                    FontAttributes="Bold" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

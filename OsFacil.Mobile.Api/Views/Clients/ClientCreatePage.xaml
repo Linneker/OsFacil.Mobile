@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Clients.ClientCreatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Clients"
+    x:DataType="vm:ClientCreateViewModel"
+    Title="Cadastrar cliente"
+    BackgroundColor="{DynamicResource AppBackground}">
+
+    <Grid RowDefinitions="*,Auto" Padding="16">
+
+        <!-- FORM -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="14">
+
+                <!-- Card -->
+                <Border StrokeThickness="1"
+                        Stroke="{DynamicResource Border}"
+                        BackgroundColor="{DynamicResource Surface}"
+                        Padding="16">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="14">
+
+                        <!-- Nome -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Nome"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding ClientModel.NameBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Entry Placeholder="Ex: João da Silva"
+                                       Text="{Binding ClientModel.Name}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{DynamicResource Text}"
+                                       PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding ClientModel.NameError}"
+                                   IsVisible="{Binding HasNameError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                        <!-- Telefone -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Contato (Telefone)"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding ClientModel.PhoneBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Entry Placeholder="(31) 99999-9999"
+                                       Keyboard="Telephone"
+                                       Text="{Binding ClientModel.Phone}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{DynamicResource Text}"
+                                       PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding ClientModel.PhoneError}"
+                                   IsVisible="{Binding HasPhoneError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                        <!-- Email -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Email"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="{Binding ClientModel.EmailBorderColor}"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Entry Placeholder="cliente@dominio.com"
+                                       Keyboard="Email"
+                                       Text="{Binding ClientModel.Email}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{DynamicResource Text}"
+                                       PlaceholderColor="{DynamicResource Placeholder}" />
+                            </Border>
+
+                            <Label Text="{Binding ClientModel.EmailError}"
+                                   IsVisible="{Binding HasEmailError}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource Danger}" />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Espaço extra -->
+                <BoxView HeightRequest="10" Opacity="0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- FOOTER BUTTONS -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+            <Button Text="Voltar"
+                    Command="{Binding BackCommand}"
+                    CommandParameter="{x:Boolean False}"
+                    BackgroundColor="{DynamicResource Surface2}"
+                    TextColor="{DynamicResource Text}"
+                    CornerRadius="14"
+                    HeightRequest="46"
+                    FontAttributes="Bold" />
+
+            <Button Grid.Column="1"
+                    Text="{Binding SaveButtonText}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    BackgroundColor="{DynamicResource Primary}"
+                    TextColor="White"
+                    CornerRadius="14"
+                    HeightRequest="46"
+                    FontAttributes="Bold" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

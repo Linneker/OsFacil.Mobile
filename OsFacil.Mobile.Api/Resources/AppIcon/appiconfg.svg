@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+	<defs>
+		<linearGradient id="bg" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#0EA5E9"/>
+			<stop offset="1" stop-color="#22C55E"/>
+		</linearGradient>
+
+		<filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.18"/>
+		</filter>
+	</defs>
+
+	<!-- App icon base -->
+	<rect x="40" y="40" width="432" height="432" rx="120" fill="url(#bg)" filter="url(#softShadow)"/>
+
+	<!-- Mark: OS + check -->
+	<g stroke="#FFFFFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none">
+		<!-- O -->
+		<circle cx="196" cy="228" r="78"/>
+
+		<!-- S (clássico e legível em tamanho pequeno) -->
+		<path d="M330 148
+             C 386 148 386 208 330 208
+             C 262 208 262 268 330 268
+             C 402 268 402 356 330 356
+             C 274 356 258 402 258 402" />
+
+		<!-- Check (facilidade/sucesso) -->
+		<path d="M300 372 L 340 412 L 430 322"/>
+	</g>
+</svg>

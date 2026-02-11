@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- P�gina padr�o -->
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F8FAFC, Dark=#0B1220}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <!-- Texto -->
+	<Style x:Key="H1" TargetType="Label">
+		<Setter Property="FontSize" Value="{DynamicResource FontXl}" />
+		<Setter Property="FontAttributes" Value="Bold" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+	</Style>
+
+	<Style x:Key="Subtle" TargetType="Label">
+		<Setter Property="FontSize" Value="{DynamicResource FontSm}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+	</Style>
+
+	<Style x:Key="FieldLabel" TargetType="Label">
+		<Setter Property="FontSize" Value="{DynamicResource FontSm}" />
+		<Setter Property="FontAttributes" Value="Bold" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+		<Setter Property="Margin" Value="2,0,0,6" />
+	</Style>
+
+
+	<!-- Card (Quadrado central da tela) -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light=#E2E8F0, Dark=#223047}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#111B2E}" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="18" />
+    </Style>
+
+    <!-- Entry padr�o -->
+    <Style x:Key="EntryField" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+        <Setter Property="HeightRequest" Value="46" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!-- Bot�o prim�rio -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#2563EB" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="46" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <!-- Bot�o secund�rio -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#E2E8F0, Dark=#223047}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="46" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+</ResourceDictionary>

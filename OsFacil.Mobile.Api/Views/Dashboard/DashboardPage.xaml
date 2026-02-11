@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Dashboard.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels"
+    xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+    x:DataType="vm:DashboardViewModel"
+    Title="Dashboard"
+    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#0B1220}">
+
+    <Grid>
+        <RefreshView
+            IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+            Command="{Binding RefreshCommand}">
+
+            <ScrollView>
+                <VerticalStackLayout Padding="16" Spacing="14">
+
+                    <!-- KPIs -->
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+
+                        <!-- Total -->
+                        <Border
+                            Padding="14"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Total de OS" FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                <Label Text="{Binding Dashboard.TotalWorkOrders}" FontSize="28" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Mês -->
+                        <Border Grid.Column="1"
+                            Padding="14"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="OS no mês" FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                <Label Text="{Binding Dashboard.WorkOrdersThisMonth}" FontSize="28" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Hoje (span 2 colunas) -->
+                        <Border Grid.Row="1" Grid.ColumnSpan="2"
+                            Padding="14"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="OS hoje" FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                    <Label Text="{Binding Dashboard.WorkOrdersToday}" FontSize="28" FontAttributes="Bold" />
+                                </VerticalStackLayout>
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding Dashboard.CurrentPlan}"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       FontAttributes="Bold" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Plano + Pizza -->
+                    <Border
+                        Padding="14"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Uso do plano" FontSize="14" FontAttributes="Bold" />
+                                    <Label Text="{Binding PlanUsageText}" FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                </VerticalStackLayout>
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding PlanUsagePercent, StringFormat='{0:0.#}%'}"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                            </Grid>
+
+                            <Grid ColumnDefinitions="160,*" ColumnSpacing="12">
+                                <chart:SfCircularChart HeightRequest="160" WidthRequest="160">
+                                    <chart:DoughnutSeries
+                                        ItemsSource="{Binding PlanSlices}"
+                                        XBindingPath="Label"
+                                        YBindingPath="Value"
+                                        ShowDataLabels="True">
+                                        <chart:DoughnutSeries.DataLabelSettings>
+                                            <chart:CircularDataLabelSettings
+                                                LabelPosition="Outside"
+                                                UseSeriesPalette="True" />
+                                        </chart:DoughnutSeries.DataLabelSettings>
+                                    </chart:DoughnutSeries>
+                                </chart:SfCircularChart>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="MRR" FontAttributes="Bold" />
+                                        <Label Grid.Column="1" Text="{Binding Dashboard.MrrText}" />
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="Conversão" FontAttributes="Bold" />
+                                        <Label Grid.Column="1" Text="{Binding ConversionRateText}" />
+                                    </Grid>
+
+                                    <ProgressBar Progress="{Binding PlanUsagePercent, Converter={x:Null}}" />
+                                    <!-- Se você quiser, eu te passo um converter % -> 0..1 pra ProgressBar ficar perfeito -->
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- loading overlay simples -->
+        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="#80000000" InputTransparent="False">
+            <ActivityIndicator IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center" />
+        </Grid>
+    </Grid>
+</ContentPage>

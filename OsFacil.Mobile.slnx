@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="OsFacil.Mobile.Api/OsFacil.Mobile.Api.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="OsFacil.Mobile.Service/OsFacil.Mobile.Service.csproj" />
+</Solution>
