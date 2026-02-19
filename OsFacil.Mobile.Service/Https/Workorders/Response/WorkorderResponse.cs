@@ -29,5 +29,5 @@ public class WorkorderResponse
     public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("finishedAt")]
-    public DateTime FinishedAt { get; set; }
+    public DateTime? FinishedAt { get; set; }
 }

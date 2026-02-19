@@ -7,6 +7,7 @@ public interface IRootNavigator
 {
     void ShowLogin();
     void ShowMain();
+    void ShowSubscription();
     Task Logout();
 
 }

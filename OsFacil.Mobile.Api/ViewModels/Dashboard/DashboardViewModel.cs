@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OsFacil.Mobile.Api.Models.Dashboard;
+using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
 using OsFacil.Mobile.Service.Https.Dashboard;
 using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@ public sealed partial class DashboardViewModel : ObservableObject
 {
     private readonly IMetricsHttp _metrics;
     private readonly IAuthSession _session;
+    private readonly IFlyoutNavigationService _nav;
 
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private bool isRefreshing;
@@ -28,10 +30,11 @@ public sealed partial class DashboardViewModel : ObservableObject
     public string MrrText => $"{dashboard.Mrr:C}";
     public string ConversionRateText => $"{dashboard.ConversionRate:0.##}%";
 
-    public DashboardViewModel(IMetricsHttp metrics, IAuthSession session)
+    public DashboardViewModel(IMetricsHttp metrics, IAuthSession session, IFlyoutNavigationService nav)
     {
         _metrics = metrics;
         _session = session;
+        _nav = nav;
         PlanSlices = new ObservableCollection<PlanSliceModel>();
     }
 
@@ -47,7 +50,9 @@ public sealed partial class DashboardViewModel : ObservableObject
             var dto = await _metrics.GetDashboardAsync(_session.AccessToken ?? string.Empty);
             if (!dto.IsSuccessStatusCode)
             {
-
+                if (dto.Error.Contains("SUBSCRIPTION_EXPIRED")){
+                    await _nav.NavigateToAsync("subscriptions");
+                }
             }
             else
             {

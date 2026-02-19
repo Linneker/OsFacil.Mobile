@@ -2,15 +2,19 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OsFacil.Mobile.Api.Models;
+using OsFacil.Mobile.Api.Models.Billing;
 using OsFacil.Mobile.Api.Models.Clients;
 using OsFacil.Mobile.Api.Models.Dashboard;
 using OsFacil.Mobile.Api.Models.Workorders;
+using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
 using OsFacil.Mobile.Api.ViewModels;
+using OsFacil.Mobile.Api.ViewModels.Billing;
 using OsFacil.Mobile.Api.ViewModels.Clients;
 using OsFacil.Mobile.Api.ViewModels.Workorders;
 using OsFacil.Mobile.Api.Views;
+using OsFacil.Mobile.Api.Views.Billing;
 using OsFacil.Mobile.Api.Views.Clients;
 using OsFacil.Mobile.Api.Views.Dashboard;
 using OsFacil.Mobile.Api.Views.Workorders;
@@ -80,6 +84,10 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<LoginModel>();
             builder.Services.AddScoped<LoginPage>();
 
+            builder.Services.AddScoped<RegisterViewModel>();
+            builder.Services.AddScoped<RegisterModel>();
+            builder.Services.AddScoped<RegisterPage>();
+
             builder.Services.AddScoped<ClientViewModel>();
             builder.Services.AddScoped<ClientModel>();
             builder.Services.AddScoped<ClientPage>();
@@ -101,6 +109,16 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<WorkorderCreateViewModel>();
             builder.Services.AddScoped<CreateWorkorderModel>();
 
+            builder.Services.AddScoped<WorkorderEditPage>();
+            builder.Services.AddScoped<WorkorderEditViewModel>();
+            builder.Services.AddScoped<EditWorkorderModel>();
+
+            builder.Services.AddScoped<IBillingCacheService, BillingCacheService>();
+            builder.Services.AddScoped<SubscriptionPage>();
+            builder.Services.AddScoped<SubscriptionViewModel>();
+            builder.Services.AddScoped<SubscriptionModel>();
+            builder.Services.AddScoped<PaymentWebViewPage>();
+            builder.Services.AddScoped<PaymentWebViewViewModel>();
 
             builder.Services.AddHttpServices(builder.Configuration);
 

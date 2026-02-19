@@ -17,5 +17,5 @@ public class UpdateWorkOrderHttp
     public int Status { get; set; }
 
     [JsonPropertyName("amount")]
-    public int Amount { get; set; }
+    public decimal Amount { get; set; }
 }

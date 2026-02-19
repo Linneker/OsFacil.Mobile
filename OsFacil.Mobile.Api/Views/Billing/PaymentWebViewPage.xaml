@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Billing.PaymentWebViewPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Billing"
+    x:DataType="vm:PaymentWebViewViewModel"
+    Title="Pagamento"
+    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#0B1220}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <WebView x:Name="PaymentWebView"
+                 Source="{Binding PaymentUrl}"
+                 Navigating="OnWebViewNavigating" />
+
+        <Button Grid.Row="1"
+                Text="Fechar"
+                Command="{Binding CloseCommand}"
+                Margin="16,8"
+                HeightRequest="44"
+                FontSize="14"
+                CornerRadius="12"
+                BackgroundColor="{AppThemeBinding Light=#0F172A, Dark=#0F172A}"
+                TextColor="White" />
+    </Grid>
+</ContentPage>

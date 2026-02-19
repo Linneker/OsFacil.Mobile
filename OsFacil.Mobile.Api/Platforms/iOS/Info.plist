@@ -28,5 +28,9 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necessário para fotografar ordens de serviço</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necessário para selecionar fotos das ordens de serviço</string>
 </dict>
 </plist>

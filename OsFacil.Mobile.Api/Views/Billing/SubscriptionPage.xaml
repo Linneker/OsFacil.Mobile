@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Billing.SubscriptionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Billing"
+    xmlns:m="clr-namespace:OsFacil.Mobile.Api.Models.Billing"
+    x:DataType="vm:SubscriptionViewModel"
+    Title="Assinatura"
+    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#0B1220}">
+
+    <ScrollView Padding="16">
+        <VerticalStackLayout Spacing="16">
+
+            <!-- CARD 1: Status Atual -->
+            <Border Padding="16"
+                    StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Status da Assinatura"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+
+                        <!-- Badge Expirado/Válido -->
+                        <Border Grid.Column="1"
+                                Padding="10,4"
+                                BackgroundColor="{Binding Subscription.Expired, Converter={StaticResource BoolToExpiredColorConverter}}"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Label Text="{Binding Subscription.Expired, Converter={StaticResource BoolToExpiredTextConverter}}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White" />
+                        </Border>
+                    </Grid>
+
+                    <!-- Detalhes -->
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*"
+                          RowSpacing="8"
+                          ColumnSpacing="12">
+
+                        <Label Text="Plano:" FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Column="1" Text="{Binding Subscription.Plan}" FontSize="13" />
+
+                        <Label Grid.Row="1" Text="Status:" FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Subscription.Status}" FontSize="13" />
+
+                        <Label Grid.Row="2" Text="Válido até:" FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Subscription.ValidUntilFormatted}" FontSize="13" />
+
+                        <Label Grid.Row="3" Text="Limite mensal:" FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Subscription.MonthlyLimitText}" FontSize="13" />
+
+                        <Label Grid.Row="4" Text="Usado este mês:" FontSize="13" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding Subscription.UsedThisMonth}" FontSize="13" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- CARD 2: Renovar -->
+            <Border Padding="16"
+                    StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#111B2E}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Renovar Assinatura"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <!-- Plano -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Plano"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#0B1220}"
+                                Padding="4,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Picker ItemsSource="{Binding PlanOptions}"
+                                    SelectedIndex="{Binding Subscription.SelectedPlanIndex}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Quantidade OS (Flex) -->
+                    <VerticalStackLayout Spacing="6"
+                                         IsVisible="{Binding Subscription.IsFlexSelected}">
+                        <Label FontSize="12"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Quantidade de OS/mês: " />
+                                    <Span Text="{Binding Subscription.FlexQuantity}"
+                                          FontAttributes="Bold" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Stepper Minimum="200"
+                                 Maximum="400"
+                                 Increment="50"
+                                 Value="{Binding Subscription.FlexQuantity}" />
+                    </VerticalStackLayout>
+
+                    <!-- Meses -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label FontSize="12"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Meses: " />
+                                    <Span Text="{Binding Subscription.Months}"
+                                          FontAttributes="Bold" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Stepper Minimum="1"
+                                 Maximum="12"
+                                 Increment="1"
+                                 Value="{Binding Subscription.Months}" />
+                    </VerticalStackLayout>
+
+                    <!-- Total -->
+                    <Border Padding="14,10"
+                            BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#162032}"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Total:"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding Subscription.TotalPrice, StringFormat='R$ {0:N2}'}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Preço unitário -->
+                    <Label FontSize="11"
+                           TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
+                           HorizontalOptions="End">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Subscription.UnitPrice, StringFormat='R$ {0:N2}'}" />
+                                <Span Text=" /mês" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <!-- Botão Pagar -->
+                    <Button Text="Pagar com Mercado Pago"
+                            Command="{Binding PayCommand}"
+                            HeightRequest="48"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            BackgroundColor="#00A0E3"
+                            TextColor="White"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               HorizontalOptions="Center"
+                               Color="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+            <!-- Botão Sair -->
+            <Button Text="Sair da conta"
+                    Command="{Binding LogoutCommand}"
+                    HeightRequest="44"
+                    FontSize="14"
+                    CornerRadius="12"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}"
+                    BorderWidth="1"
+                    BorderColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}"
+                    HorizontalOptions="Fill"
+                    Margin="0,8,0,16" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

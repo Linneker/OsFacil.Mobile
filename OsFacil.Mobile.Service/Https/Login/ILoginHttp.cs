@@ -7,5 +7,6 @@ namespace OsFacil.Mobile.Service.Https.Login;
 
 public interface ILoginHttp
 {
-    public Task<ResponseHttps<LoginHttpResponse>> LoginAsync(LoginHttpRequest request, CancellationToken ct = default);
+    Task<ResponseHttps<LoginHttpResponse>> LoginAsync(LoginHttpRequest request, CancellationToken ct = default);
+    Task<RegisterTenantHttpResponse> RegisterTenantAsync(RegisterTenantHttpRequest request, CancellationToken ct = default);
 }

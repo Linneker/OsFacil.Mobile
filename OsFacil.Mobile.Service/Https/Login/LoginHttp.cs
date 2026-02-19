@@ -51,4 +51,47 @@ public class LoginHttp : ILoginHttp
             return responseHttps;
         }
     }
+
+    public async Task<RegisterTenantHttpResponse> RegisterTenantAsync(RegisterTenantHttpRequest request, CancellationToken ct = default)
+    {
+        try
+        {
+            using var response = await _httpClient.PostAsJsonAsync("/api/tenants/register", request, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync(ct);
+
+                // Endpoint retorna Results.BadRequest(new { error = "..." })
+                string? errorMsg = null;
+                if (!string.IsNullOrEmpty(errorBody))
+                {
+                    try
+                    {
+                        var errorObj = JsonSerializer.Deserialize<JsonElement>(errorBody);
+                        if (errorObj.TryGetProperty("error", out var errProp))
+                            errorMsg = errProp.GetString();
+                    }
+                    catch { errorMsg = errorBody; }
+                }
+
+                return new RegisterTenantHttpResponse
+                {
+                    Success = false,
+                    Error = errorMsg ?? "Erro ao registrar. Tente novamente."
+                };
+            }
+
+            // Endpoint retorna Results.Ok(result.Data) — sucesso
+            return new RegisterTenantHttpResponse { Success = true };
+        }
+        catch (Exception e)
+        {
+            return new RegisterTenantHttpResponse
+            {
+                Success = false,
+                Error = "Erro de conexão: " + e.Message
+            };
+        }
+    }
 }

@@ -1,5 +1,8 @@
-﻿using OsFacil.Mobile.Api.Services.Session;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using OsFacil.Mobile.Api.Services.Session;
+using OsFacil.Mobile.Api.ViewModels.Messages;
 using OsFacil.Mobile.Api.Views;
+using OsFacil.Mobile.Api.Views.Billing;
 
 namespace OsFacil.Mobile.Api.Services.Navigation;
 
@@ -15,7 +18,8 @@ public sealed class RootNavigator : IRootNavigator
 
     public async Task Logout()
     {
-        await _session.ClearAsync(); // ou _session.Clear()
+        await _session.ClearAsync();
+        WeakReferenceMessenger.Default.Send(new SessionClearedMessage());
         ShowLogin();
     }
 
@@ -29,6 +33,12 @@ public sealed class RootNavigator : IRootNavigator
     {
         var main = _sp.GetRequiredService<FlyoutApp>();
         SetRoot(main);
+    }
+
+    public void ShowSubscription()
+    {
+        var page = _sp.GetRequiredService<SubscriptionPage>();
+        SetRoot(new NavigationPage(page));
     }
 
     private static void SetRoot(Page page)

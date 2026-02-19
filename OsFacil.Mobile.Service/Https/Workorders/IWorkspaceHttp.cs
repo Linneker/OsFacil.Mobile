@@ -20,4 +20,7 @@ public interface IWorkspaceHttp
         string contentType,
         Dictionary<string, string>? fields = null, CancellationToken ct = default);
 
+    Task<Stream?> GetWorkOrderPdfAsync(string token, Guid id, CancellationToken ct = default);
+
+    Task<byte[]?> DownloadPhotoAsync(string token, string url, CancellationToken ct = default);
 }

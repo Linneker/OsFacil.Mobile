@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OsFacil.Mobile.Api.Services.Navigation;
-using OsFacil.Mobile.Api.ViewModels.Clients;
 using System.Collections.ObjectModel;
 
 namespace OsFacil.Mobile.Api.ViewModels;
@@ -9,25 +8,31 @@ namespace OsFacil.Mobile.Api.ViewModels;
 public partial class MenuViewModel : ObservableObject
 {
     private readonly IFlyoutNavigationService _nav;
+    private readonly IRootNavigator _root;
 
-    private readonly ClientViewModel _clientViewModel;
     public ObservableCollection<MenuItemVm> Items { get; } = new()
     {
-        new("dashboard","Dashboard"),
-        new("clients","Clientes"),
-        new("workorders","Ordens de serviço"),
-        new("subscriptions","Assinaturas"),
-        new("profile","Perfil"),
+        new("dashboard",  "Dashboard"),
+        new("clients",    "Clientes"),
+        new("workorders", "Ordens de serviço"),
+        new("subscriptions", "Assinaturas"),
+        new("logout",     "Sair"),
     };
 
-    public MenuViewModel(IFlyoutNavigationService nav)
+    public MenuViewModel(IFlyoutNavigationService nav, IRootNavigator root)
     {
         _nav = nav;
+        _root = root;
     }
 
     [RelayCommand]
     private Task SelectAsync(MenuItemVm item)
-    => _nav.NavigateToAsync(item.Key);
+    {
+        if (item.Key == "logout")
+            return _root.Logout();
+
+        return _nav.NavigateToAsync(item.Key);
+    }
 
 
 

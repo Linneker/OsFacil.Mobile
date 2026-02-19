@@ -1,4 +1,6 @@
-﻿using OsFacil.Mobile.Api.Views;
+﻿using CommunityToolkit.Mvvm.Input;
+using OsFacil.Mobile.Api.Views;
+using OsFacil.Mobile.Api.Views.Billing;
 using OsFacil.Mobile.Api.Views.Clients;
 using OsFacil.Mobile.Api.Views.Dashboard;
 using OsFacil.Mobile.Api.Views.Workorders;
@@ -12,10 +14,12 @@ public class FlyoutNavigationService : IFlyoutNavigationService
 {
     private FlyoutPage? _host;
     private readonly IServiceProvider _sp;
+    private readonly IRootNavigator _root;
 
-    public FlyoutNavigationService(IServiceProvider sp)
+    public FlyoutNavigationService(IServiceProvider sp, IRootNavigator root)
     {
         _sp = sp;
+        _root = root;
     }
 
     public void SetHost(FlyoutPage host) => _host = host;
@@ -53,9 +57,8 @@ public class FlyoutNavigationService : IFlyoutNavigationService
             "dashboard" => _sp.GetRequiredService<DashboardPage>(),
             "clients" => _sp.GetRequiredService<ClientPage>(),
             "workorders" => _sp.GetRequiredService<WorkorderPage>(),
-            //"subscriptions" => _sp.GetRequiredService<SubscriptionPage>(),
+            "subscriptions" => _sp.GetRequiredService<SubscriptionPage>(),
             //"profile" => _sp.GetRequiredService<ProfilePage>(),
-            //_ => _sp.GetRequiredService<DashboardPage>(),
             _ => _sp.GetRequiredService<ClientPage>()
         };
 
@@ -82,6 +85,7 @@ public class FlyoutNavigationService : IFlyoutNavigationService
         {
             "createClient" => _sp.GetRequiredService<ClientCreatePage>(),
             "createWorkspace" => _sp.GetRequiredService<WorkorderCreatePage>(),
+            "workspaceExecution" => _sp.GetRequiredService<WorkorderEditPage>(),
             _ => throw new ArgumentException($"Rota inválida: {key}")
         };
 
@@ -106,4 +110,5 @@ public class FlyoutNavigationService : IFlyoutNavigationService
             // se estiver na raiz, não faz nada (ou você pode abrir o menu, ou ignorar)
         });
     }
+
 }

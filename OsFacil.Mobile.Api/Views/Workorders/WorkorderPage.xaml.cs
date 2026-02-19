@@ -1,3 +1,4 @@
+using OsFacil.Mobile.Api.Models.Workorders;
 using OsFacil.Mobile.Api.ViewModels.Workorders;
 
 namespace OsFacil.Mobile.Api.Views.Workorders;
@@ -19,5 +20,11 @@ public partial class WorkorderPage : ContentPage
 
         if (!_vm.HasLoaded || _vm.NeedsReload || _vm.Items.Count == 0)
             _vm.ReloadCommand.Execute(null);
+    }
+
+    private void OnOpenExecutionClicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.BindingContext is WorkorderModel item)
+            _vm.OpenExecutionCommand.Execute(item);
     }
 }

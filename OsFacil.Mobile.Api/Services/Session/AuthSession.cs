@@ -20,6 +20,8 @@ public sealed class AuthSession : IAuthSession
     {
         AccessToken = null;
         SecureStorage.Remove(TokenKey);
+        Preferences.Remove("billing_data");
+        Preferences.Remove("billing_date");
         return Task.CompletedTask;
     }
 }

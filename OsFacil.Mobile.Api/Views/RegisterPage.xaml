@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OsFacil.Mobile.Api.Views.RegisterPage"
+             xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels"
+             x:DataType="vm:RegisterViewModel"
+             Title="Cadastrar" BackgroundColor="White">
+
+    <Grid Padding="18">
+
+        <ScrollView VerticalOptions="Center">
+            <Border
+                HorizontalOptions="Center"
+                WidthRequest="360"
+                StrokeThickness="1"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111B2E}"
+                Padding="18">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <Border.Shadow>
+                    <Shadow Brush="#000000"
+                            Opacity="0.12"
+                            Radius="18"
+                            Offset="0,8" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Titulo -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Criar conta"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Label Text="Preencha os dados para registrar sua empresa."
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    </VerticalStackLayout>
+
+                    <!-- Nome da Empresa -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Nome da empresa"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}"
+                                Padding="12,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="22,*" ColumnSpacing="10">
+                                <Image Source="company_img.png"
+                                       HeightRequest="18"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       Opacity="0.85" />
+
+                                <Entry Grid.Column="1"
+                                       Placeholder="Ex: Minha Empresa"
+                                       Text="{Binding Register.CompanyName}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Slug da Empresa -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Slug da empresa"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}"
+                                Padding="12,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="22,*" ColumnSpacing="10">
+                                <Image Source="company_img.png"
+                                       HeightRequest="18"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       Opacity="0.85" />
+
+                                <Entry Grid.Column="1"
+                                       Placeholder="ex: minha-empresa"
+                                       Text="{Binding Register.CompanySlug}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Nome do Admin -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Seu nome"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}"
+                                Padding="12,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="22,*" ColumnSpacing="10">
+                                <Image Source="user-plus.svg"
+                                       HeightRequest="18"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       Opacity="0.85" />
+
+                                <Entry Grid.Column="1"
+                                       Placeholder="Ex: João Silva"
+                                       Text="{Binding Register.AdminName}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Email -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Email"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}"
+                                Padding="12,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="22,*" ColumnSpacing="10">
+                                <Image Source="email_img.svg"
+                                       HeightRequest="18"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       Opacity="0.85" />
+
+                                <Entry Grid.Column="1"
+                                       Keyboard="Email"
+                                       Placeholder="seuemail@dominio.com"
+                                       Text="{Binding Register.AdminEmail}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Senha -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Senha"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#0F1A2F}"
+                                Padding="12,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="22,*" ColumnSpacing="10">
+                                <Image Source="lock_img.png"
+                                       HeightRequest="18"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       Opacity="0.85" />
+
+                                <Entry Grid.Column="1"
+                                       IsPassword="True"
+                                       Placeholder="••••••••"
+                                       Text="{Binding Register.AdminPassword}"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#94A3B8}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Erro -->
+                    <Label Text="{Binding Register.Error}"
+                           TextColor="#EF4444"
+                           FontSize="12" />
+
+                    <!-- Botoes -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,6,0,0">
+                        <Button Grid.Column="0"
+                                Text="Voltar"
+                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}"
+                                BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#223047}"
+                                CornerRadius="14"
+                                HeightRequest="46"
+                                FontAttributes="Bold"
+                                Command="{Binding GoBackCommand}" />
+
+                        <Button Grid.Column="1"
+                                Text="Cadastrar"
+                                TextColor="White"
+                                BackgroundColor="#2563EB"
+                                CornerRadius="14"
+                                HeightRequest="46"
+                                FontAttributes="Bold"
+                                Command="{Binding RegisterCommand}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

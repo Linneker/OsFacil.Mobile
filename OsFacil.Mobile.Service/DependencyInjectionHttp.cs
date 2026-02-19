@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OsFacil.Mobile.Service.Https.Clients;
 using OsFacil.Mobile.Service.Https.Dashboard;
 using OsFacil.Mobile.Service.Https.Login;
+using OsFacil.Mobile.Service.Https.Billing;
 using OsFacil.Mobile.Service.Https.Workorders;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,13 @@ public static class DependencyInjectionHttp
             client.BaseAddress = new Uri(url);
             client.Timeout = TimeSpan.FromSeconds(30);
         });
-    
+
+        services.AddHttpClient<IBillingHttp, BillingHttp>(client =>
+        {
+            client.BaseAddress = new Uri(url);
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+
         return services;
     }
 }

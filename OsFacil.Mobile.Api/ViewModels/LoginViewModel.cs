@@ -2,10 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Controls;
 using OsFacil.Mobile.Api.Models;
+using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
 using OsFacil.Mobile.Api.ViewModels.Clients;
 using OsFacil.Mobile.Api.Views;
+using OsFacil.Mobile.Service.Https.Billing;
 using OsFacil.Mobile.Service.Https.Login;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -24,12 +26,17 @@ public partial class LoginViewModel : ObservableObject
     private readonly IAuthSession _session;
     private readonly IFlyoutNavigationService _nav;
     private readonly IRootNavigator _root;
+    private readonly IServiceProvider _sp;
+    private readonly IBillingHttp _billingHttp;
+    private readonly IBillingCacheService _billingCache;
 
     public ObservableCollection<LoginModel> Logins { get; set; }
 
     public LoginViewModel(ILoginHttp loginHttp, IToastService toast, ClientViewModel clientViewModel, IAuthSession session,
-        IFlyoutNavigationService nav, IRootNavigator root)
+        IFlyoutNavigationService nav, IRootNavigator root, IServiceProvider sp,
+        IBillingHttp billingHttp, IBillingCacheService billingCache)
     {
+        _sp = sp;
         _nav = nav;
         Login = new LoginModel()
         {
@@ -43,6 +50,8 @@ public partial class LoginViewModel : ObservableObject
         _clientViewModel = clientViewModel;
         _session = session;
         _root = root;
+        _billingHttp = billingHttp;
+        _billingCache = billingCache;
     }
 
     [RelayCommand]
@@ -55,10 +64,27 @@ public partial class LoginViewModel : ObservableObject
         {
             await _toast.ShowAsync("Login realizado com sucesso!");
             await _session.SetTokenAsync(response.Data.AccessToken);
-            //NavigationPage clientPage = (NavigationPage)App.Current.MainPage;
-            //await clientPage.PushAsync(new ClientPage(_clientViewModel, _nav));
-            _root.ShowMain();
 
+            // Verificar billing/assinatura — sempre busca fresco no login
+            try
+            {
+                var billing = await _billingHttp.GetStatusAsync(response.Data.AccessToken);
+                if (billing.IsSuccessStatusCode)
+                {
+                    await _billingCache.CacheAsync(billing.Data);
+                    if (billing.Data.Expired)
+                    {
+                        _root.ShowSubscription();
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // Degradação graciosa: se falhar, segue pro app
+            }
+
+            _root.ShowMain();
         }
         else
         {
@@ -74,5 +100,11 @@ public partial class LoginViewModel : ObservableObject
         return Task.CompletedTask;
     }
 
-
+    [RelayCommand]
+    private async Task GoToRegisterAsync()
+    {
+        var registerPage = _sp.GetRequiredService<RegisterPage>();
+        if (Application.Current?.Windows.FirstOrDefault()?.Page is NavigationPage nav)
+            await nav.PushAsync(registerPage);
+    }
 }

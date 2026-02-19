@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="OsFacil.Mobile.Api.Views.Workorders.WorkorderEditPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:OsFacil.Mobile.Api.ViewModels.Workorders"
+    x:DataType="vm:WorkorderEditViewModel"
+    Title="Editar ordem de serviço"
+    BackgroundColor="{DynamicResource AppBackground}">
+
+    <!-- Grid raiz sem padding para o overlay cobrir tudo -->
+    <Grid>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <Grid RowDefinitions="*,Auto" Padding="16">
+
+            <!-- FORM -->
+            <ScrollView Grid.Row="0">
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Card: Informações -->
+                    <Border StrokeThickness="1"
+                            Stroke="{DynamicResource Border}"
+                            BackgroundColor="{DynamicResource Surface}"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18"/>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="14">
+
+                            <Label Text="Informações"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <!-- Cliente (somente leitura) -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Cliente"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource Placeholder}" />
+                                <Label Text="{Binding Model.ClientName}"
+                                       FontSize="14"
+                                       TextColor="{DynamicResource Text}" />
+                            </VerticalStackLayout>
+
+                            <!-- Titulo (somente leitura) -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Título"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource Placeholder}" />
+                                <Label Text="{Binding Model.Title}"
+                                       FontSize="14"
+                                       TextColor="{DynamicResource Text}" />
+                            </VerticalStackLayout>
+
+                            <!-- Descrição (editável) -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Descrição"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource Placeholder}" />
+                                <Border StrokeThickness="1"
+                                        Stroke="{DynamicResource Border}"
+                                        BackgroundColor="{DynamicResource Surface2}"
+                                        Padding="10,6">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Editor Text="{Binding Model.Description}"
+                                            AutoSize="TextChanges"
+                                            MinimumHeightRequest="80"
+                                            FontSize="14"
+                                            TextColor="{DynamicResource Text}"
+                                            Placeholder="Digite a descrição..."
+                                            PlaceholderColor="{DynamicResource Placeholder}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Valor (editável) -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Valor (R$)"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource Placeholder}" />
+                                <Border StrokeThickness="1"
+                                        Stroke="{DynamicResource Border}"
+                                        BackgroundColor="{DynamicResource Surface2}"
+                                        Padding="12,8">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Entry Text="{Binding Model.Amount}"
+                                           Keyboard="Numeric"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{DynamicResource Text}"
+                                           Placeholder="0.00"
+                                           PlaceholderColor="{DynamicResource Placeholder}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card: Status -->
+                    <Border StrokeThickness="1"
+                            Stroke="{DynamicResource Border}"
+                            BackgroundColor="{DynamicResource Surface}"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18"/>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Status"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <Border StrokeThickness="1"
+                                    Stroke="#E2E8F0"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Picker Title="Selecione o status"
+                                        SelectedIndex="{Binding Model.SelectedStatusIndex}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{DynamicResource Text}"
+                                        TitleColor="{DynamicResource Placeholder}">
+                                    <Picker.Items>
+                                        <x:String>Aberto</x:String>
+                                        <x:String>Em andamento</x:String>
+                                        <x:String>Concluido</x:String>
+                                        <x:String>Cancelado</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card: Fotos Antes do Serviço -->
+                    <Border StrokeThickness="1"
+                            Stroke="{DynamicResource Border}"
+                            BackgroundColor="{DynamicResource Surface}"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18"/>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Fotos antes do serviço"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <CollectionView ItemsSource="{Binding Model.BeforeImages}"
+                                            HeightRequest="120"
+                                            ItemsLayout="HorizontalList">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,8,0"
+                                                StrokeThickness="1"
+                                                Stroke="{DynamicResource Border}"
+                                                WidthRequest="100"
+                                                HeightRequest="100">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="10"/>
+                                            </Border.StrokeShape>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnImageTapped" />
+                                            </Border.GestureRecognizers>
+                                            <Image Source="{Binding .}"
+                                                   Aspect="AspectFill"
+                                                   WidthRequest="100"
+                                                   HeightRequest="100" />
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                            <Button Text="Adicionar foto (antes)"
+                                    Command="{Binding AddBeforeImageCommand}"
+                                    HeightRequest="40"
+                                    FontSize="13"
+                                    CornerRadius="12"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    TextColor="{DynamicResource Text}"
+                                    BorderWidth="1"
+                                    BorderColor="{DynamicResource Border}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card: Fotos Depois do Serviço -->
+                    <Border StrokeThickness="1"
+                            Stroke="{DynamicResource Border}"
+                            BackgroundColor="{DynamicResource Surface}"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18"/>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Fotos depois do serviço"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Text}" />
+
+                            <CollectionView ItemsSource="{Binding Model.AfterImages}"
+                                            HeightRequest="120"
+                                            ItemsLayout="HorizontalList">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,8,0"
+                                                StrokeThickness="1"
+                                                Stroke="{DynamicResource Border}"
+                                                WidthRequest="100"
+                                                HeightRequest="100">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="10"/>
+                                            </Border.StrokeShape>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnImageTapped" />
+                                            </Border.GestureRecognizers>
+                                            <Image Source="{Binding .}"
+                                                   Aspect="AspectFill"
+                                                   WidthRequest="100"
+                                                   HeightRequest="100" />
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                            <Button Text="Adicionar foto (depois)"
+                                    Command="{Binding AddAfterImageCommand}"
+                                    HeightRequest="40"
+                                    FontSize="13"
+                                    CornerRadius="12"
+                                    BackgroundColor="{DynamicResource Surface2}"
+                                    TextColor="{DynamicResource Text}"
+                                    BorderWidth="1"
+                                    BorderColor="{DynamicResource Border}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <BoxView HeightRequest="10" Opacity="0" />
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- FOOTER BUTTONS -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="10">
+
+                <Button Text="Voltar"
+                        Command="{Binding BackCommand}"
+                        BackgroundColor="{DynamicResource Surface2}"
+                        TextColor="{DynamicResource Text}"
+                        CornerRadius="14"
+                        HeightRequest="46"
+                        FontAttributes="Bold" />
+
+                <Button Grid.Column="1"
+                        Text="PDF"
+                        Command="{Binding SharePdfCommand}"
+                        IsEnabled="{Binding IsNotBusy}"
+                        BackgroundColor="{DynamicResource Surface2}"
+                        TextColor="{DynamicResource Text}"
+                        CornerRadius="14"
+                        HeightRequest="46"
+                        FontAttributes="Bold" />
+
+                <Button Grid.Column="2"
+                        Text="{Binding SaveButtonText}"
+                        Command="{Binding SaveStatusCommand}"
+                        IsEnabled="{Binding IsNotBusy}"
+                        BackgroundColor="{DynamicResource Primary}"
+                        TextColor="White"
+                        CornerRadius="14"
+                        HeightRequest="46"
+                        FontAttributes="Bold" />
+            </Grid>
+
+        </Grid>
+
+        <!-- OVERLAY: visualizador de imagem em tela cheia -->
+        <Grid IsVisible="{Binding IsImageExpanded}"
+              BackgroundColor="#D9000000"
+              ZIndex="10">
+
+            <!-- Toque no fundo fecha o modal -->
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CloseImageCommand}" />
+            </Grid.GestureRecognizers>
+
+            <!-- Imagem expandida -->
+            <Image Source="{Binding SelectedImage}"
+                   Aspect="AspectFit"
+                   Margin="24"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Center" />
+
+            <!-- Botão fechar (canto superior direito) -->
+            <Border WidthRequest="38"
+                    HeightRequest="38"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="16"
+                    BackgroundColor="White"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="19" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CloseImageCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="✕"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#111827"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>

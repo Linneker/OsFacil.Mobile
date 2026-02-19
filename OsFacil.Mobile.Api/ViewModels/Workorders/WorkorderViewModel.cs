@@ -4,11 +4,13 @@ using CommunityToolkit.Mvvm.Messaging;
 using OsFacil.Mobile.Api.Models.Workorders;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
+using OsFacil.Mobile.Api.ViewModels.Messages;
 using OsFacil.Mobile.Api.ViewModels.Workorders.Messages;
 using OsFacil.Mobile.Service.Https.Workorders;
 using OsFacil.Mobile.Service.Https.Workorders.Request;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Input;
 
 namespace OsFacil.Mobile.Api.ViewModels.Workorders;
 
@@ -17,11 +19,14 @@ public partial class WorkorderViewModel : ObservableObject
     private readonly IWorkspaceHttp _service;
     private readonly IAuthSession _session;
     private readonly IFlyoutNavigationService _nav;
+    private readonly WorkorderEditViewModel _editVm;
 
     private const int PageSize = 20;
     private int _page = 1;
     private bool _hasMore = true;
     private GetWorkOrdersPaginatedRequest _getWorkOrdersPaginatedRequest = new GetWorkOrdersPaginatedRequest();
+
+    public IRelayCommand<WorkorderModel> OpenExecutionCommand { get; }
 
     [ObservableProperty] private ObservableCollection<WorkorderModel> items = new();
 
@@ -35,15 +40,31 @@ public partial class WorkorderViewModel : ObservableObject
     public string FiltersToggleText => IsFiltersOpen ? "Fechar" : "Abrir";
 
     [ObservableProperty] private WorkorderFiltersModel filters = new();
-    public WorkorderViewModel(IWorkspaceHttp service, IAuthSession session, IFlyoutNavigationService nav)
+    public WorkorderViewModel(IWorkspaceHttp service, IAuthSession session, IFlyoutNavigationService nav, WorkorderEditViewModel editVm)
     {
         _service = service;
         _session = session;
         _nav = nav;
+        _editVm = editVm;
+
+        OpenExecutionCommand = new AsyncRelayCommand<WorkorderModel>(OpenExecutionAsync);
 
         WeakReferenceMessenger.Default.Register<WorkordersChangedMessage>(this, (r, m) =>
         {
             ((WorkorderViewModel)r).NeedsReload = m.Value;
+        });
+
+        WeakReferenceMessenger.Default.Register<SessionClearedMessage>(this, (r, _) =>
+        {
+            var vm = (WorkorderViewModel)r;
+            vm.Items.Clear();
+            vm.HasLoaded = false;
+            vm.NeedsReload = false;
+            vm._page = 1;
+            vm._hasMore = true;
+            vm._getWorkOrdersPaginatedRequest = new GetWorkOrdersPaginatedRequest();
+            vm.Filters = new WorkorderFiltersModel();
+            vm.IsFiltersOpen = false;
         });
     }
 
@@ -221,13 +242,12 @@ public partial class WorkorderViewModel : ObservableObject
         return _nav.PushAsync("createWorkspace");
     }
 
-    [RelayCommand]
-    private Task OpenExecutionAsync(WorkorderModel item)
+    private async Task OpenExecutionAsync(WorkorderModel? item)
     {
-        if (item is null) return Task.CompletedTask;
+        if (item is null) return;
 
-        WeakReferenceMessenger.Default.Send(new OpenWorkspaceExecutionMessage(item.Id));
-        return _nav.PushAsync("workspaceExecution");
+        _editVm.PrepareLoad(item.Id);
+        await _nav.PushAsync("workspaceExecution");
     }
 
     private static bool TryParseDecimal(string? text, out decimal value)

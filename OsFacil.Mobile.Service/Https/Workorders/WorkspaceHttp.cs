@@ -237,4 +237,37 @@ public class WorkspaceHttp : IWorkspaceHttp
         }
         return responseHttps;
     }
+
+    public async Task<Stream?> GetWorkOrderPdfAsync(string token, Guid id, CancellationToken ct = default)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"api/workorders/{id}/pdf", ct);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var ms = new MemoryStream();
+            await response.Content.CopyToAsync(ms, ct);
+            ms.Position = 0;
+            return ms;
+        }
+        catch { return null; }
+    }
+
+    public async Task<byte[]?> DownloadPhotoAsync(string token, string url, CancellationToken ct = default)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync(url, ct);
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadAsByteArrayAsync(ct);
+        }
+        catch { return null; }
+    }
 }
