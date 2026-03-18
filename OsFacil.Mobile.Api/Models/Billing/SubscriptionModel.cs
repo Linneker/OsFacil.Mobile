@@ -15,9 +15,11 @@ public partial class SubscriptionModel : ObservableObject
     private bool expired;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ValidUntilFormatted))]
     private DateTime? validUntil;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MonthlyLimitText))]
     private int monthlyLimit;
 
     [ObservableProperty]

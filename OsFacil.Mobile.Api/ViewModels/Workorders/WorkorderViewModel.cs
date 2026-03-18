@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using OsFacil.Mobile.Api.Models.Workorders;
+using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
 using OsFacil.Mobile.Api.ViewModels.Messages;
@@ -20,6 +21,7 @@ public partial class WorkorderViewModel : ObservableObject
     private readonly IAuthSession _session;
     private readonly IFlyoutNavigationService _nav;
     private readonly WorkorderEditViewModel _editVm;
+    private readonly ISubscriptionGuard _guard;
 
     private const int PageSize = 20;
     private int _page = 1;
@@ -40,12 +42,13 @@ public partial class WorkorderViewModel : ObservableObject
     public string FiltersToggleText => IsFiltersOpen ? "Fechar" : "Abrir";
 
     [ObservableProperty] private WorkorderFiltersModel filters = new();
-    public WorkorderViewModel(IWorkspaceHttp service, IAuthSession session, IFlyoutNavigationService nav, WorkorderEditViewModel editVm)
+    public WorkorderViewModel(IWorkspaceHttp service, IAuthSession session, IFlyoutNavigationService nav, WorkorderEditViewModel editVm, ISubscriptionGuard guard)
     {
         _service = service;
         _session = session;
         _nav = nav;
         _editVm = editVm;
+        _guard = guard;
 
         OpenExecutionCommand = new AsyncRelayCommand<WorkorderModel>(OpenExecutionAsync);
 
@@ -119,7 +122,8 @@ public partial class WorkorderViewModel : ObservableObject
     private async Task ClearFiltersAsync()
     {
         Filters.AmountText = "";
-
+        Filters.ClientNameOrSlug = "";
+        
         Filters.UseCreatedAtRange = false;
         Filters.UseFinishedAtRange = false;
 
@@ -128,7 +132,7 @@ public partial class WorkorderViewModel : ObservableObject
         Filters.FinishedCreatedAtDate = DateTime.Today;
         Filters.StartFinishedAtDate = DateTime.Today;
         Filters.FinesedFinishedAtDate = DateTime.Today;
-
+        _getWorkOrdersPaginatedRequest = new();
         await ReloadAsync();
     }
 
@@ -160,6 +164,12 @@ public partial class WorkorderViewModel : ObservableObject
         try
         {
             IsBusy = true;
+
+            if (await _guard.IsExpiredAsync())
+            {
+                await _nav.NavigateToAsync("subscriptions");
+                return;
+            }
 
             Items.Clear();
             _page = 1;

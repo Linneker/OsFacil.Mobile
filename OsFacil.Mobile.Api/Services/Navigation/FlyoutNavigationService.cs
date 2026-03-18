@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Views;
 using OsFacil.Mobile.Api.Views.Billing;
 using OsFacil.Mobile.Api.Views.Clients;
@@ -15,11 +16,13 @@ public class FlyoutNavigationService : IFlyoutNavigationService
     private FlyoutPage? _host;
     private readonly IServiceProvider _sp;
     private readonly IRootNavigator _root;
+    private readonly ISubscriptionGuard _guard;
 
-    public FlyoutNavigationService(IServiceProvider sp, IRootNavigator root)
+    public FlyoutNavigationService(IServiceProvider sp, IRootNavigator root, ISubscriptionGuard guard)
     {
         _sp = sp;
         _root = root;
+        _guard = guard;
     }
 
     public void SetHost(FlyoutPage host) => _host = host;
@@ -48,9 +51,12 @@ public class FlyoutNavigationService : IFlyoutNavigationService
         return newNav;
     }
 
-    public Task NavigateToAsync(string key)
+    public async Task NavigateToAsync(string key)
     {
-        if (_host is null) return Task.CompletedTask;
+        if (_host is null) return;
+
+        if (key != "subscriptions" && await _guard.IsExpiredAsync())
+            key = "subscriptions";
 
         Page page = key switch
         {
@@ -58,29 +64,25 @@ public class FlyoutNavigationService : IFlyoutNavigationService
             "clients" => _sp.GetRequiredService<ClientPage>(),
             "workorders" => _sp.GetRequiredService<WorkorderPage>(),
             "subscriptions" => _sp.GetRequiredService<SubscriptionPage>(),
-            //"profile" => _sp.GetRequiredService<ProfilePage>(),
-            _ => _sp.GetRequiredService<ClientPage>()
+            _ => _sp.GetRequiredService<DashboardPage>()
         };
 
-
-        return MainThread.InvokeOnMainThreadAsync(() =>
+        await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            _host.Detail = new NavigationPage(page); // reset stack
+            _host.Detail = new NavigationPage(page);
             _host.IsPresented = false;
         });
-
-        // coloca a página dentro de um NavigationPage (pra ter Title/Toolbar)
-        //_host.Detail = new NavigationPage(page);
-
-        // fecha o menu após navegar
-        //_host.IsPresented = false;
-
-        //return Task.CompletedTask;
     }
 
     // ✅ NAVEGAÇÃO DENTRO DA SEÇÃO: empilha página (aí existe VOLTAR)
-    public Task PushAsync(string key)
+    public async Task PushAsync(string key)
     {
+        if (await _guard.IsExpiredAsync())
+        {
+            await NavigateToAsync("subscriptions");
+            return;
+        }
+
         Page page = key switch
         {
             "createClient" => _sp.GetRequiredService<ClientCreatePage>(),
@@ -91,7 +93,7 @@ public class FlyoutNavigationService : IFlyoutNavigationService
 
         var nav = GetNav();
 
-        return MainThread.InvokeOnMainThreadAsync(async () =>
+        await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             _host!.IsPresented = false;
             await nav.Navigation.PushAsync(page);

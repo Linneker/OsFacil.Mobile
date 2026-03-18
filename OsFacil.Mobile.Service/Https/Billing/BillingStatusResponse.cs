@@ -17,9 +17,13 @@ public class BillingStatusResponse : IResponseHttp
     [JsonPropertyName("validUntil")]
     public DateTime? ValidUntil { get; set; }
 
-    [JsonPropertyName("monthlyLimit")]
-    public int MonthlyLimit { get; set; }
+    [JsonPropertyName("monthlyWorkOrderLimit")]
+    public int MonthlyWorkOrderLimit { get; set; }
 
-    [JsonPropertyName("usedThisMonth")]
+    [JsonPropertyName("monthlyWorkOrderRemaining")]
+    public int MonthlyWorkOrderRemaining { get; set; }
+
+
+    [JsonPropertyName("monthlyWorkOrderUsed")]
     public int UsedThisMonth { get; set; }
 }

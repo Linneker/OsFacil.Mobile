@@ -144,7 +144,7 @@ public partial class SubscriptionViewModel : ObservableObject
         Subscription.Status = data.Status ?? string.Empty;
         Subscription.Expired = data.Expired;
         Subscription.ValidUntil = data.ValidUntil;
-        Subscription.MonthlyLimit = data.MonthlyLimit;
+        Subscription.MonthlyLimit = data.MonthlyWorkOrderLimit;
         Subscription.UsedThisMonth = data.UsedThisMonth;
         Subscription.RecalculatePrice();
     }

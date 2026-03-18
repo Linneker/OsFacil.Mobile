@@ -20,7 +20,6 @@ using OsFacil.Mobile.Api.Views.Dashboard;
 using OsFacil.Mobile.Api.Views.Workorders;
 using OsFacil.Mobile.Service;
 using Syncfusion.Maui.Toolkit.Hosting;
-using System.Reflection;
 
 namespace OsFacil.Mobile.Api
 {
@@ -29,19 +28,11 @@ namespace OsFacil.Mobile.Api
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-
-            var assembly = Assembly.GetExecutingAssembly();
-            // Substitua "NomeDoSeuProjeto" pelo namespace do seu projeto
-            using var stream = assembly.GetManifestResourceStream("OsFacil.Mobile.Api.appsettings.json");
-
-            if (stream != null)
-            {
-                var config = new ConfigurationBuilder()
-                    .AddJsonStream(stream)
-                    .Build();
-
-                builder.Configuration.AddConfiguration(config);
-            }
+            using var stream = FileSystem.OpenAppPackageFileAsync("appsettings.json").GetAwaiter().GetResult();
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build();
+            builder.Configuration.AddConfiguration(config);
 
 
             builder
@@ -114,6 +105,7 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<EditWorkorderModel>();
 
             builder.Services.AddScoped<IBillingCacheService, BillingCacheService>();
+            builder.Services.AddScoped<ISubscriptionGuard, SubscriptionGuard>();
             builder.Services.AddScoped<SubscriptionPage>();
             builder.Services.AddScoped<SubscriptionViewModel>();
             builder.Services.AddScoped<SubscriptionModel>();
