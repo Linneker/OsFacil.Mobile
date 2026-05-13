@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Tamanhos -->
+    <x:Double x:Key="FontXs">12</x:Double>
+    <x:Double x:Key="FontSm">13</x:Double>
+    <x:Double x:Key="FontMd">15</x:Double>
+    <x:Double x:Key="FontLg">17</x:Double>
+    <x:Double x:Key="FontXl">22</x:Double>
+
+</ResourceDictionary>

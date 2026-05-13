@@ -17,6 +17,9 @@ public partial class SubscriptionViewModel : ObservableObject
     [ObservableProperty]
     private bool isLoading;
 
+    [ObservableProperty]
+    private bool isRefreshing;
+
     private readonly IBillingHttp _billingHttp;
     private readonly IBillingCacheService _cache;
     private readonly IAuthSession _session;
@@ -103,6 +106,7 @@ public partial class SubscriptionViewModel : ObservableObject
                 var webViewPage = _sp.GetRequiredService<PaymentWebViewPage>();
                 var webViewVm = _sp.GetRequiredService<PaymentWebViewViewModel>();
                 webViewVm.PaymentUrl = response.Data.CheckoutUrl;
+                webViewVm.InvoiceId = Guid.TryParse(response.Data.InvoiceId, out var invId) ? invId : null;
                 webViewPage.BindingContext = webViewVm;
 
                 if (Application.Current?.Windows.FirstOrDefault()?.Page is NavigationPage nav)
@@ -123,6 +127,39 @@ public partial class SubscriptionViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task RefreshAsync()
+    {
+        var token = _session.AccessToken;
+        if (string.IsNullOrEmpty(token))
+        {
+            IsRefreshing = false;
+            return;
+        }
+
+        try
+        {
+            var response = await _billingHttp.GetStatusAsync(token);
+            if (response.IsSuccessStatusCode && response.Data is not null)
+            {
+                await _cache.CacheAsync(response.Data);
+                MapToModel(response.Data);
+            }
+            else
+            {
+                await _toast.ShowAsync(response.Error ?? "Erro ao atualizar assinatura");
+            }
+        }
+        catch (Exception e)
+        {
+            await _toast.ShowAsync($"Erro: {e.Message}");
+        }
+        finally
+        {
+            IsRefreshing = false;
         }
     }
 

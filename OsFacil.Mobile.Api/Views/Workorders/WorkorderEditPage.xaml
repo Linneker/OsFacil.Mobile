@@ -159,7 +159,7 @@
                                             HeightRequest="120"
                                             ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="ImageSource">
                                         <Border Margin="0,0,8,0"
                                                 StrokeThickness="1"
                                                 Stroke="{DynamicResource Border}"
@@ -211,7 +211,7 @@
                                             HeightRequest="120"
                                             ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="ImageSource">
                                         <Border Margin="0,0,8,0"
                                                 StrokeThickness="1"
                                                 Stroke="{DynamicResource Border}"

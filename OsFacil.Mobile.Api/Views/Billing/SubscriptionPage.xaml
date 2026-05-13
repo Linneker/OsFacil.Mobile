@@ -9,6 +9,8 @@
     Title="Assinatura"
     BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#0B1220}">
 
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding RefreshCommand}">
     <ScrollView Padding="16">
         <VerticalStackLayout Spacing="16">
 
@@ -207,4 +209,5 @@
 
         </VerticalStackLayout>
     </ScrollView>
+    </RefreshView>
 </ContentPage>

@@ -6,6 +6,8 @@ using OsFacil.Mobile.Api.Models.Billing;
 using OsFacil.Mobile.Api.Models.Clients;
 using OsFacil.Mobile.Api.Models.Dashboard;
 using OsFacil.Mobile.Api.Models.Workorders;
+using OsFacil.Mobile.Api.PageModels;
+using OsFacil.Mobile.Api.Pages;
 using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
@@ -19,6 +21,7 @@ using OsFacil.Mobile.Api.Views.Clients;
 using OsFacil.Mobile.Api.Views.Dashboard;
 using OsFacil.Mobile.Api.Views.Workorders;
 using OsFacil.Mobile.Service;
+using OsFacil.Mobile.Service.Http;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace OsFacil.Mobile.Api
@@ -71,7 +74,7 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<ModalErrorHandler>();
             builder.Services.AddScoped<IToastService, ToastService>();
 
-            builder.Services.AddScoped<LoginViewModel>();
+            builder.Services.AddScoped<ViewModels.LoginViewModel>();
             builder.Services.AddScoped<LoginModel>();
             builder.Services.AddScoped<LoginPage>();
 
@@ -104,6 +107,8 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<WorkorderEditViewModel>();
             builder.Services.AddScoped<EditWorkorderModel>();
 
+            builder.Services.AddSingleton<IBillingEventBus, BillingEventBus>();
+
             builder.Services.AddScoped<IBillingCacheService, BillingCacheService>();
             builder.Services.AddScoped<ISubscriptionGuard, SubscriptionGuard>();
             builder.Services.AddScoped<SubscriptionPage>();
@@ -121,6 +126,8 @@ namespace OsFacil.Mobile.Api
             builder.Services.AddScoped<FlyoutApp>();
             builder.Services.AddScoped<MenuViewModel>();
             builder.Services.AddScoped<CategoryModel>();
+            builder.Services.AddTransient<TaskDetailPage>();
+            builder.Services.AddTransient<TaskDetailPageModel>();
             
 
             return builder.Build();

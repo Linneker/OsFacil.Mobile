@@ -1,8 +1,18 @@
-﻿namespace OsFacil.Mobile.Api.Services.Session;
+using OsFacil.Mobile.Api.Services.Billing;
+
+namespace OsFacil.Mobile.Api.Services.Session;
 
 public sealed class AuthSession : IAuthSession
 {
     private const string TokenKey = "auth_token";
+
+    private readonly IBillingCacheService _billingCache;
+
+    public AuthSession(IBillingCacheService billingCache)
+    {
+        _billingCache = billingCache;
+    }
+
     public string? AccessToken { get; private set; }
 
     public async Task LoadAsync()
@@ -20,8 +30,7 @@ public sealed class AuthSession : IAuthSession
     {
         AccessToken = null;
         SecureStorage.Remove(TokenKey);
-        Preferences.Remove("billing_data");
-        Preferences.Remove("billing_date");
+        _billingCache.Clear();
         return Task.CompletedTask;
     }
 }

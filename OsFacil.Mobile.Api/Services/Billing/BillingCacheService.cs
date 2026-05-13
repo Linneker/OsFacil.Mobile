@@ -1,4 +1,5 @@
 using OsFacil.Mobile.Service.Https.Billing;
+using System.Globalization;
 using System.Text.Json;
 
 namespace OsFacil.Mobile.Api.Services.Billing;
@@ -7,6 +8,7 @@ public class BillingCacheService : IBillingCacheService
 {
     private const string DataKey = "billing_data";
     private const string DateKey = "billing_date";
+    private static readonly TimeSpan Ttl = TimeSpan.FromHours(1);
 
     public async Task<BillingStatusResponse?> GetCachedAsync()
     {
@@ -35,14 +37,22 @@ public class BillingCacheService : IBillingCacheService
 
     public bool NeedsRefresh()
     {
-        var dateStr = Preferences.Get(DateKey, string.Empty);
-        if (string.IsNullOrEmpty(dateStr))
-            return true;
+        var last = LastCheckUtc;
+        if (last is null) return true;
+        return DateTime.UtcNow - last.Value >= Ttl;
+    }
 
-        if (!DateTime.TryParse(dateStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var lastCheck))
-            return true;
-
-        return (DateTime.UtcNow - lastCheck).TotalHours >= 24;
+    public DateTime? LastCheckUtc
+    {
+        get
+        {
+            var dateStr = Preferences.Get(DateKey, string.Empty);
+            if (string.IsNullOrEmpty(dateStr))
+                return null;
+            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var parsed))
+                return null;
+            return parsed;
+        }
     }
 
     public void Clear()

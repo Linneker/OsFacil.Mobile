@@ -193,10 +193,11 @@ public partial class WorkorderEditViewModel : ObservableObject
     {
         try
         {
-            var page = Application.Current?.Windows.FirstOrDefault()?.Page
-                       ?? Application.Current!.MainPage!;
+            var page = Application.Current?.Windows.FirstOrDefault()?.Page;
+            if (page is null)
+                return;
 
-            var action = await page.DisplayActionSheet(
+            var action = await page.DisplayActionSheetAsync(
                 "Selecionar foto", "Cancelar", null, "Câmera", "Galeria");
 
             if (action == "Câmera")

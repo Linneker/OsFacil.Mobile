@@ -48,6 +48,40 @@ public class BillingHttp : IBillingHttp
         return responseHttps;
     }
 
+    public async Task<ResponseHttps<BillingInvoiceResponse>> GetInvoiceAsync(string token, Guid invoiceId, CancellationToken ct = default)
+    {
+        var responseHttps = new ResponseHttps<BillingInvoiceResponse>();
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            using var response = await _httpClient.GetAsync($"/api/billing/invoices/{invoiceId:D}", ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync(ct);
+                responseHttps.IsSuccessStatusCode = false;
+                responseHttps.StatusCode = (int)response.StatusCode;
+                responseHttps.Error = string.IsNullOrEmpty(errorBody) ? "Erro ao consultar invoice" : errorBody;
+            }
+            else
+            {
+                var result = await response.Content.ReadFromJsonAsync<BillingInvoiceResponse>(
+                    options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+                    cancellationToken: ct);
+                responseHttps.Data = result ?? new BillingInvoiceResponse();
+                responseHttps.IsSuccessStatusCode = true;
+                responseHttps.StatusCode = (int)response.StatusCode;
+            }
+        }
+        catch (Exception e)
+        {
+            responseHttps.IsSuccessStatusCode = false;
+            responseHttps.StatusCode = 500;
+            responseHttps.Error = $"Erro ao consultar invoice: {e.Message}";
+        }
+        return responseHttps;
+    }
+
     public async Task<ResponseHttps<RenewResponse>> RenewAsync(string token, RenewRequest request, CancellationToken ct = default)
     {
         var responseHttps = new ResponseHttps<RenewResponse>();

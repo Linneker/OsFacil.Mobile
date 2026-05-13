@@ -13,6 +13,7 @@
             <conv:BoolToExpiredColorConverter x:Key="BoolToExpiredColorConverter" />
             <conv:BoolToExpiredTextConverter x:Key="BoolToExpiredTextConverter" />
             <conv:InvertBoolConverter x:Key="InvertBoolConverter" />
+            <FileImageSource x:Key="IconAdd" File="plus_img.png" />
         </ResourceDictionary>
     </Application.Resources>
 

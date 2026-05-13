@@ -7,5 +7,6 @@ public interface IBillingCacheService
     Task<BillingStatusResponse?> GetCachedAsync();
     Task CacheAsync(BillingStatusResponse data);
     bool NeedsRefresh();
+    DateTime? LastCheckUtc { get; }
     void Clear();
 }

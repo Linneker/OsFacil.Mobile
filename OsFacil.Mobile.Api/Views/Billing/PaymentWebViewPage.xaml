@@ -14,6 +14,30 @@
                  Source="{Binding PaymentUrl}"
                  Navigating="OnWebViewNavigating" />
 
+        <!-- Confirming overlay -->
+        <Grid IsVisible="{Binding IsConfirmingPayment}"
+              BackgroundColor="#80000000">
+            <VerticalStackLayout Spacing="12"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center">
+                <ActivityIndicator IsRunning="True"
+                                   Color="White" />
+                <Label Text="Confirmando pagamento..."
+                       TextColor="White"
+                       FontSize="14"
+                       HorizontalOptions="Center" />
+                <Button Text="Cancelar verificação"
+                        Command="{Binding CancelPollingCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        BorderColor="White"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        HeightRequest="40"
+                        WidthRequest="200" />
+            </VerticalStackLayout>
+        </Grid>
+
         <Button Grid.Row="1"
                 Text="Fechar"
                 Command="{Binding CloseCommand}"

@@ -50,8 +50,6 @@ public sealed class RootNavigator : IRootNavigator
 
             if (window != null)
                 window.Page = page;
-            else
-                app!.MainPage = page; // fallback raro
         });
     }
 

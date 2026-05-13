@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Maui.Controls;
 using OsFacil.Mobile.Api.Models;
 using OsFacil.Mobile.Api.Models.Clients;
-using OsFacil.Mobile.Api.Services.Billing;
 using OsFacil.Mobile.Api.Services.Navigation;
 using OsFacil.Mobile.Api.Services.Session;
 using OsFacil.Mobile.Api.ViewModels.Clients.Messagens;
@@ -20,7 +19,6 @@ public partial class ClientViewModel : ObservableObject
     private readonly IAuthSession _session;
     private readonly IFlyoutNavigationService _navagation;
     private readonly IToastService _toast;
-    private readonly ISubscriptionGuard _guard;
 
     private const int PageSize = 20;
     private int _page = 1;
@@ -33,12 +31,11 @@ public partial class ClientViewModel : ObservableObject
     [ObservableProperty] private bool hasLoaded;
     [ObservableProperty] private bool needsReload;
 
-    public ClientViewModel(IClientHttp service, IAuthSession session, IFlyoutNavigationService sp, IToastService toast, ISubscriptionGuard guard)
+    public ClientViewModel(IClientHttp service, IAuthSession session, IFlyoutNavigationService sp, IToastService toast)
     {
         _service = service;
         _session = session;
         _navagation = sp;
-        _guard = guard;
 
         WeakReferenceMessenger.Default.Register<ClientsChangedMessage>(this, (obj, msg) =>
         {
@@ -100,12 +97,6 @@ public partial class ClientViewModel : ObservableObject
         try
         {
             IsBusy = true;
-
-            if (await _guard.IsExpiredAsync())
-            {
-                await _navagation.NavigateToAsync("subscriptions");
-                return;
-            }
 
             if (Items is null)
                 Items = new ObservableCollection<ClientModel>();
