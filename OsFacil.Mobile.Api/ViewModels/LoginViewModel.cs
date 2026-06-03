@@ -38,12 +38,13 @@ public partial class LoginViewModel : ObservableObject
     {
         _sp = sp;
         _nav = nav;
-        Login = new LoginModel()
-        {
-            Password = "SenhaForte@123",
-            Email = "linneker.blytner@gmail.com",
-            Slug = "linneker-blytner-braga"
-        };
+        Login = new LoginModel();
+       //Login = new LoginModel()
+       //{
+       //    Password = "SenhaForte@123",
+       //    Email = "linneker.blytner@gmail.com",
+       //    Slug = "linneker-blytner-braga"
+       //};
         _toast = toast;
         Logins = new ObservableCollection<LoginModel>();
         _loginHttp = loginHttp;

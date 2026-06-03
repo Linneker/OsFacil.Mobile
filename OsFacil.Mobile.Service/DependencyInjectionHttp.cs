@@ -16,7 +16,7 @@ public static class DependencyInjectionHttp
     {
         var url = configuration["UrlOsFacilApi"];
         if (string.IsNullOrWhiteSpace(url))
-            url = "http://192.168.1.100:56901";
+            url = "http://www.api-osfacil.acmesistemas.com.br/";
 
         url = url.Trim();
         if (!url.EndsWith("/", StringComparison.Ordinal))
